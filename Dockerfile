@@ -21,7 +21,10 @@
 
 FROM alpine:3.18 AS guix
 
-# Image descriptor
+# Install required packages including git and CA certificates
+RUN apk update && apk add --no-cache git ca-certificates curl \
+    && update-ca-certificates
+
 LABEL copyright.name="Vicente Eduardo Ferrer Garcia" \
       copyright.address="vic798@gmail.com" \
       maintainer.name="Vicente Eduardo Ferrer Garcia" \
@@ -35,10 +38,6 @@ ARG METACALL_GUIX_ARCH
 
 # Copy entry point script
 COPY scripts/entry-point.sh /entry-point.sh
-
-# Install required packages including git and CA certificates
-RUN apk update && apk add --no-cache git ca-certificates curl \
-    && update-ca-certificates
 
 # Set up Guix environment
 RUN mkdir -p /gnu/store \
@@ -74,17 +73,14 @@ ENV GUIX_PROFILE="/root/.config/guix/current" \
 # Copy additional channels
 COPY channels/ /root/.config/guix/
 
-# Run pull and verify installation
-RUN --security=insecure sh -c '/entry-point.sh guix pull && guix package --fallback -i nss-certs' \
-    && sh -c '/entry-point.sh guix gc && guix gc --optimize' \
-    && [ -e /root/.guix-profile/etc/ssl/certs/ca-certificates.crt ] \
-    && [ "`cat /root/.config/guix/channels.scm | grep commit | cut -d'"' -f 2`" = "`guix --version | head -n 1 | awk '{print $NF}'`" ]
-
 # Debugging: Check if CA certificates are installed
 RUN ls -l /etc/ssl/certs/
 
 # Configure Git for large files
 RUN git config --global http.postBuffer 524288000
+
+# Run garbage collection to clean up any temporary files
+RUN /entry-point.sh guix gc
 
 # Set the entry point for the container
 ENTRYPOINT ["/entry-point.sh"]
