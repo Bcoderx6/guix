@@ -52,3 +52,8 @@ jobs:
           --allow security.insecure \
           --build-arg METACALL_GUIX_VERSION="$METACALL_GUIX_VERSION" \
           --build-arg METACALL_GUIX_ARCH="$METACALL_GUIX_ARCH" .
+          
+      - name: Check Docker image size
+        run: |
+          echo "Checking size of the built Docker image..."
+          docker images local/metacall/guix:${GITHUB_SHA} --format "{{.Repository}}:{{.Tag}} - {{.Size}}"
