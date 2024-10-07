@@ -46,4 +46,4 @@ jobs:
           #password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push image
-        run: docker buildx build -t metacall/guix --output type=image,name=docker.io/metacall/guix:${GITHUB_SHA},push=${{ github.event_name != 'pull_request' }} --allow security.insecure --build-arg METACALL_GUIX_VERSION="$METACALL_GUIX_VERSION" --build-arg METACALL_GUIX_ARCH="$METACALL_GUIX_ARCH" .
+        run: docker buildx build -t metacall/guix --output type=image,name=docker.io/metacall/guix:${GITHUB_SHA} --allow security.insecure --build-arg METACALL_GUIX_VERSION="$METACALL_GUIX_VERSION" --build-arg METACALL_GUIX_ARCH="$METACALL_GUIX_ARCH" .
