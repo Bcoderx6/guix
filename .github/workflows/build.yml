@@ -56,7 +56,7 @@ jobs:
       - name: Create a new builder instance
         run: docker buildx create --use --name insecure-builder --buildkitd-flags '--allow-insecure-entitlement security.insecure'
 
-       - name: Create Swap
+      - name: Create Swap
         run: |
           sudo fallocate -l 2G /swapfile
           sudo chmod 600 /swapfile
@@ -135,7 +135,7 @@ jobs:
         run: |
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
             $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
-      
+
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
