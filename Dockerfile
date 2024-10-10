@@ -19,7 +19,7 @@
 #	limitations under the License.
 #
 
-FROM debian:bookworm AS guix
+FROM alpine:3.18 AS guix
 
 # Image descriptor
 LABEL copyright.name="Vicente Eduardo Ferrer Garcia" \
