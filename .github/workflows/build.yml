@@ -56,6 +56,14 @@ jobs:
       - name: Create a new builder instance
         run: docker buildx create --use --name insecure-builder --buildkitd-flags '--allow-insecure-entitlement security.insecure'
 
+       - name: Create Swap
+        run: |
+          sudo fallocate -l 2G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          free -h
+
       - name: Authenticate to Docker registry
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
