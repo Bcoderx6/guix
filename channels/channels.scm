@@ -20,5 +20,5 @@
        (name 'guix)
        (url "https://git.savannah.gnu.org/git/guix.git")
        (branch "master")
-       (commit "8ffb0c14b8abdbb471788f993a7835add147e3a8")) ; Mon Oct 14 21:58:56 2024 +0100
+       (commit "b77b4c7c3a5ac180f5aed0983be50ffbe6832f87")) ; Sun Dec 18 15:53:43 2022 +0100
 )
