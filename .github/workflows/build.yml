@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - master
-      - feature/**
+      - fix/**
     tags:
       - 'v*.*.*'
 
