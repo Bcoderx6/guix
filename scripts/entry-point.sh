@@ -22,8 +22,11 @@
 # Load profile enviroment variables
 source $GUIX_PROFILE/etc/profile
 
+# Set cores and max jobs
+export GUIX_BUILD_OPTIONS="--cores=1 --max-jobs=1"
+
 # Run guix daemon
-/root/.config/guix/current/bin/guix-daemon --build-users-group=guixbuild &
+/root/.config/guix/current/bin/guix-daemon --build-users-group=guixbuild --cores=1 --max-jobs=1 &
 GUIX_DAEMON=$!
 
 # Execute commands
