@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - metacall-guix-cicd-analysis
     tags:
       - 'v*.*.*'
 
@@ -13,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  REGISTRY_IMAGE: metacall/guix
+  REGISTRY_IMAGE: mryash/guix
   GUIX_VERSION: 1.4.0
   BUILDKIT_VERSION: 0.13.0
 
@@ -93,6 +94,25 @@ jobs:
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
+
+
+     - name: Save build logs
+       if: always()
+       run: |
+        mkdir -p logs
+        docker buildx inspect > logs/buildx_inspect.log 2>&1
+        dmesg > logs/kernel_logs.log
+        journalctl -u docker.service --no-pager > logs/docker_logs.log
+        cp /tmp/digests/* logs/ || true
+        continue-on-error: true
+
+     - name: Upload logs
+       if: always()
+       uses: actions/upload-artifact@v4
+       with:
+        name: build-logs-${{ matrix.platform.guix }}
+        path: logs/
+        retention-days: 5
 
   merge:
     name: Merge digests for the manifest
